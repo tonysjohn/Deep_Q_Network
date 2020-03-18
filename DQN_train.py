@@ -87,6 +87,7 @@ class DQNAgent:
         self.target_model = self.createModel()
         self.target_model.set_weights(self.model.get_weights())
 
+        #Tensorboard
         self.tensorboard = ModifiedTensorBoard(log_dir = f"log/{ENV}-{int(time.time())}")
         
         self.replay_memory = deque(maxlen = REPLAY_MEMORY_SIZE)
@@ -103,7 +104,6 @@ class DQNAgent:
         #model.add(BatchNormalization())
         model.add(Dense(self.action_size, activation='linear'))
         model.compile(loss = 'mse', optimizer = Adam(lr=0.001), metrics = ['accuracy'])
-
         return model
     
 
@@ -208,7 +208,6 @@ def main():
             new_state, reward, done, _ = agent.env.step(action)
 
             #reward = custom_reward(reward,new_state)
-
             episode_reward += reward
 
             if SHOW_PREVIEW and not episode % AGGREGATE_STATS_EVERY:  #Render Environment
@@ -221,7 +220,6 @@ def main():
 
             #Train DQN
             loss = agent.train()
-
             current_state = new_state
 
         ep_rewards.append(episode_reward)

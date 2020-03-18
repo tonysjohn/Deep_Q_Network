@@ -1,16 +1,20 @@
 import gym
 import tensorflow as tf
 import numpy as np
-from enivornment import DQNAgent
+from DQN_train import DQNAgent
 
+# MountainCar-v0__1159.30max_1159.30avg_1159.30min__1583294343.model
+# CartPole-v0___200.00max__200.00avg__200.00min__1583221454.model
+
+ENV ='CartPole-v0'
 
 def main():
-    agent = DQNAgent()
-    env = gym.make('MountainCar-v0')
+    agent = DQNAgent(ENV)
+    env = gym.make(ENV)
 
     N = env.observation_space.shape[0]
 
-    load_model = tf.keras.models.load_model(r'C:\Files and Folders\project\RL\models\MountainCar-v0__1159.30max_1159.30avg_1159.30min__1583294343.model')
+    load_model = tf.keras.models.load_model(r'\models\CartPole-v0___200.00max__200.00avg__200.00min__1583221454.model')
     agent.model.set_weights(load_model.get_weights())
     
     for i in range(20):
@@ -29,12 +33,16 @@ def main():
             action = np.argmax(actions)
             print(action)
 
+
             new_state, reward, done, _ = env.step(action)
             current_state=new_state
             episode_reward+=reward
         allreward.append(episode_reward)
+        print("*"*100+"RESET"+"*"*100)
 
+    print("*"*50)
     print(np.mean(np.array(allreward)))
+    print("*"*50)
     env.close()
 
 if __name__ == "__main__":
